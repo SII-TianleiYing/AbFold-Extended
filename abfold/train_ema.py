@@ -17,7 +17,7 @@ from abfold.utils.unsupervised_loss import AlphaFoldUnsupervisedLoss
 from abfold.utils.loss import AlphaFoldLoss
 
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
-writer = SummaryWriter(f'/home/pengchao/data/abfold/train/tensorboard_logs/af_igfold_foldtrunk')
+writer = None
 
 
 def update_state_dict_(update, state_dict, decay=0.999):
