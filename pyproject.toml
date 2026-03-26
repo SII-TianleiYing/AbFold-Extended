@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "abfold"
+version = "0.1.0"
+description = "Extended AbFold package"
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["abfold*"]
