@@ -10,6 +10,14 @@ readme = "README.md"
 requires-python = ">=3.8"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
+keywords = ["abfold", "abdiff", "antibody", "protein-structure"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
 dependencies = [
     "biopython",
     "dm-tree",
@@ -44,3 +52,4 @@ include = ["abfold*"]
 
 [tool.setuptools.package-data]
 "abfold.resources" = ["*.txt"]
+"abfold.utils.kernel" = ["csrc/*.h", "csrc/*.cpp", "csrc/*.cu"]
