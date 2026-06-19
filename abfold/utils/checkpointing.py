@@ -12,10 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import deepspeed
 import torch
 import torch.utils.checkpoint
 from typing import Any, Tuple, List, Callable, Optional
+
+try:
+    import deepspeed
+except ImportError:
+    deepspeed = None
 
 
 BLOCK_ARG = Any
@@ -23,7 +27,7 @@ BLOCK_ARGS = List[BLOCK_ARG]
 
 
 def get_checkpoint_fn():
-    if(deepspeed.checkpointing.is_configured()):
+    if(deepspeed is not None and deepspeed.checkpointing.is_configured()):
         checkpoint = deepspeed.checkpointing.checkpoint
     else:
         checkpoint = torch.utils.checkpoint.checkpoint

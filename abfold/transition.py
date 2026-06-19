@@ -14,8 +14,12 @@
 
 
 import torch
-import deepspeed
 import torch.nn as nn
+
+try:
+    import deepspeed
+except ImportError:
+    deepspeed = None
 
 
 class LayerNorm(nn.Module):
@@ -30,7 +34,10 @@ class LayerNorm(nn.Module):
 
     def forward(self, x):
         d = x.dtype
-        if (d is torch.bfloat16 and not deepspeed.utils.is_initialized()):
+        deepspeed_initialized = (
+            deepspeed is not None and deepspeed.utils.is_initialized()
+        )
+        if (d is torch.bfloat16 and not deepspeed_initialized):
             with torch.cuda.amp.autocast(enabled=False):
                 out = nn.functional.layer_norm(
                     x,

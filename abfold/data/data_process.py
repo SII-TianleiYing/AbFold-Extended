@@ -24,7 +24,6 @@ from typing import Mapping, Tuple, List, Dict, Sequence
 import ml_collections
 import numpy as np
 import torch
-import anarci
 
 from abfold.config import config
 from abfold.data import data_transforms
@@ -633,6 +632,8 @@ def get_CDRs_mask_with_anarci(sequence, chain_type, only_H3=False):
     """
     if seq_to_cdr_mask.get(sequence, None) != None:
         return seq_to_cdr_mask[sequence]
+
+    import anarci
 
     # chain_type should be 'heavy' or 'light'
     result = anarci.run_anarci([("seq", sequence)], scheme="Chothia")

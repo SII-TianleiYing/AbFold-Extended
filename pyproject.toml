@@ -1,15 +1,46 @@
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools>=77.0.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "abfold"
-version = "0.1.0"
-description = "Extended AbFold package"
+name = "abfold-extended"
+version = "0.2.0"
+description = "Extended AbFold package for AbDiff inference workflows"
 readme = "README.md"
-requires-python = ">=3.7"
-dependencies = []
+requires-python = ">=3.8"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+dependencies = [
+    "biopython",
+    "dm-tree",
+    "einops",
+    "ml-collections",
+    "numpy",
+    "timm",
+    "torch",
+    "tqdm",
+]
+
+[project.optional-dependencies]
+h3 = ["anarci"]
+diffusion = ["diffusers"]
+train = [
+    "deepspeed",
+    "tensorboard",
+]
+all = [
+    "anarci",
+    "deepspeed",
+    "diffusers",
+    "tensorboard",
+]
+
+[project.urls]
+Repository = "https://github.com/SII-TianleiYing/AbFold-Extended"
 
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["abfold*"]
+
+[tool.setuptools.package-data]
+"abfold.resources" = ["*.txt"]

@@ -24,7 +24,6 @@ from abfold.utils.tensor_utils import (
     dict_multimap,
 )
 from abfold.utils.ESMFold.model import EsmFoldTriangularSelfAttentionBlock, EsmFoldRelativePosition
-from abfold.diffusion.sample import sample
 
 
 class AbFold(nn.Module):
@@ -129,7 +128,8 @@ class AbFold(nn.Module):
         if extract_embedding:
             return {'s': s.squeeze(), 'z': z.squeeze(), 'aatype': aatype.squeeze(), 'res_idx': res_idx.squeeze()}
         elif diffuse_embedding:
-            z = sample(s, z)
+            from abfold.diffusion.sample import sample as diffuse_sample
+            z = diffuse_sample(s, z)
         s_initial = s      
 
         # self_ipa and cross_ipa

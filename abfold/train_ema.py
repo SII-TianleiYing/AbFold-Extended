@@ -4,17 +4,9 @@ import time
 
 import numpy as np
 import torch
-from torch.utils.data import DataLoader
 from torch.utils.hipify.hipify_python import bcolors
-from torch.utils.tensorboard import SummaryWriter
-from tqdm import tqdm
 
-from abfold.config import config
-from abfold.data_module import AbFoldDataset, UnsupervisedDataset
-from abfold.model import AbFold
-from abfold.utils.lr_schedulers import AlphaFoldLRScheduler
-from abfold.utils.unsupervised_loss import AlphaFoldUnsupervisedLoss
-from abfold.utils.loss import AlphaFoldLoss
+from abfold.utils.device import tensor_dict_to_device
 
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 writer = None
@@ -56,16 +48,6 @@ def print_val_grad(net):
         print('%sgrad  %s: %.3e ~ %.3e' % (color, v_n[i], np.min(v_g[i]).item(), np.max(v_g[i]).item()))
 
 
-def tensor_dict_to_device(tensor_dict: dict, device):
-    new_dict = {}
-    for key, val in tensor_dict.items():
-        if type(val) == torch.Tensor:
-            new_dict[key] = val.to(device, non_blocking=True)
-        elif type(val) == dict:
-            new_dict[key] = tensor_dict_to_device(val, device)
-    return new_dict
-
-
 def adjust_dim(input):
     keys = ["frames", "sidechain_frames", "unnormalized_angles", "angles", "positions"]
     half = input['sm']['frames'].shape[0] // 2
@@ -103,6 +85,8 @@ def split_output(output, sizes):
 
 
 def train(dataloader1, dataloader2, student, teacher, loss_fn, optimizer, scheduler, epoch):
+    from tqdm import tqdm
+
     size1 = dataloader1.batch_size
     size2 = dataloader2.batch_size
     size = int(len(dataloader2.dataset) / size2)
@@ -164,6 +148,15 @@ def train(dataloader1, dataloader2, student, teacher, loss_fn, optimizer, schedu
 
 
 def main(args):
+    from torch.utils.data import DataLoader
+    from torch.utils.tensorboard import SummaryWriter
+
+    from abfold.config import config
+    from abfold.data_module import AbFoldDataset, UnsupervisedDataset
+    from abfold.model import AbFold
+    from abfold.utils.lr_schedulers import AlphaFoldLRScheduler
+    from abfold.utils.loss import AlphaFoldLoss
+
 
     os.environ['CUDA_VISIBLE_DEVICES'] = args.gpus
 
